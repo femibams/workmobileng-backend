@@ -1,5 +1,5 @@
 /**
- * Created by Adeyinka Micheal on 16/02/2019.
+ * Created by femibams on 16/09/2019.
  */
 
 const base64 = require("base-64");
@@ -8,6 +8,7 @@ const HttpStatus = require("../constants/httpStatus");
 const auth = require("basic-auth");
 const uuid = require("uuid/v4");
 const bcrypt = null;
+const crypto = require('crypto');
 const SendMail = require("./MailController");
 const config = require("../config/config");
 
@@ -278,8 +279,8 @@ class AuthController {
    * @param params
    */
   hashPassword(password) {
-    let hash = bcrypt.hashSync(password, config.mongo.salt_value);
-    return hash;
+    const key1 = crypto.scryptSync(password, 'salt', 64);
+    return key1.toString('hex');
   }
 
   /**
