@@ -1,0 +1,36 @@
+{
+  "name": "workmobileng-backend",
+  "version": "1.0.0",
+  "description": "backend service for the workmobile app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/femibams/workmobileng-backend.git"
+  },
+  "author": "femibams",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/femibams/workmobileng-backend/issues"
+  },
+  "homepage": "https://github.com/femibams/workmobileng-backend#readme",
+  "dependencies": {
+    "@sendgrid/mail": "6.3.1",
+    "base-64": "0.1.0",
+    "basic-auth": "2.0.1",
+    "bluebird": "3.5.3",
+    "cors": "2.8.5",
+    "dotenv": "^6.2.0",
+    "mongoose": "5.4.12",
+    "nodemailer": "6.1.1",
+    "referrer-policy": "1.1.0",
+    "restify": "8.3.2",
+    "restify-cors-middleware": "1.1.1",
+    "restify-plugins": "1.6.0",
+    "uuid": "3.3.2",
+    "winston": "3.2.1",
+    "winston-daily-rotate-file": "3.7.0"
+  }
+}
