@@ -161,118 +161,22 @@ class AuthController {
    * @methodVerb POST
    */
   registerNewUser(req, res) {
-    this.logger.info("register new users");
+    this.logger.info("register new user");
 
-    const Authentication = req.header("Authentication", ["Authentication"]);
-    // check if Authentication header was sent
-    if (Authentication[0] === "Authentication") {
-      return Response.failure(
-        res,
-        {
-          message: "Bad Authentication"
-        },
-        HttpStatus.UNAUTHORIZED
-      );
-    }
+    // const Authentication = req.header("Authentication", ["Authentication"]);
+    // // check if Authentication header was sent
+    // if (Authentication[0] === "Authentication") {
+    //   return Response.failure(
+    //     res,
+    //     {
+    //       message: "Bad Authentication"
+    //     },
+    //     HttpStatus.UNAUTHORIZED
+    //   );
+    // }
 
-    const decryptedAppName = this.decryptAppname(Authentication);
-    console.log(decryptedAppName, "app_name");
-
-    if (decryptedAppName === "cdp") {
-      let app_name = decryptedAppName.toLowerCase();
-
-      return this.authService
-        .getOne_cdp({ role: "superAdmin" })
-        .then(data => {
-          if (data.role !== "superAdmin") {
-            return Response.failure(
-              res,
-              {
-                message: "Only super admin allowed to create users"
-              },
-              HttpStatus.NOT_FOUND
-            );
-          }
-
-          const { password, email, role, product } = req.body;
-          // check if all required parameters were passed
-          if (!password || !email || !role || !product) {
-            return Response.failure(
-              res,
-              { message: "Error!! pls provide all sign up parameters" },
-              HttpStatus.BadRequest
-            );
-          }
-
-          this.authService.getOne_cdp({ email }, (err, existingUser) => {
-            if (err) {
-              return next(err);
-            }
-
-            // If user is not unique, return error
-            if (existingUser) {
-              return res
-                .status(422)
-                .send({ error: "That email address is already in use." });
-            }
-          });
-
-          const hashedPassword = this.hashPassword(password);
-          const params = {
-            email,
-            password: hashedPassword,
-            app_name: app_name,
-            role,
-            product,
-            createdBy: data.userId,
-            userId: uuid()
-          };
-
-          return this.authService
-            .checkForAppnameAndEmailCDP(app_name, email)
-            .then(resp => {
-              console.log("RESPONSE", resp);
-              if (resp !== null) {
-                return Response.failure(
-                  res,
-                  {
-                    message: "email already exist for the appname"
-                  },
-                  HttpStatus.BadRequest
-                );
-              }
-              return this.authService
-                .saveNewUsersCDP(params)
-                .then(data => {
-                  return Response.success(
-                    res,
-                    {
-                      message: "User successfully created",
-                      response: {
-                        userId: data.userId,
-                        createdBy: data.createdBy
-                      }
-                    },
-                    HttpStatus.CREATED
-                  );
-                })
-                .catch(err => {
-                  let formattedError = err.msg;
-                  formattedError = JSON.stringify(formattedError);
-                  return Response.failure(
-                    res,
-                    {
-                      message: `Something went wrong, email must be unique ${formattedError}`
-                    },
-                    HttpStatus.BadRequest
-                  );
-                });
-            });
-        })
-        .catch(err => {
-          console.log("unable to check for app name", err);
-        });
-    }
+    // const decryptedAppName = this.decryptAppname(Authentication);
+    // console.log(decryptedAppName, "app_name");
 
     // check if all required parameters were passed
     const { password, email } = req.body;
@@ -286,8 +190,6 @@ class AuthController {
 
     let firstname;
     let lastname;
-    let company_size;
-    let company_name;
     let msisdn;
 
     if (req.body.firstname) {
@@ -296,14 +198,6 @@ class AuthController {
 
     if (req.body.lastname) {
       lastname = req.body.lastname;
-    }
-
-    if (req.body.company_size) {
-      company_size = req.body.company_size;
-    }
-
-    if (req.body.company_name) {
-      company_name = req.body.company_name;
     }
 
     if (req.body.msisdn) {
@@ -315,21 +209,17 @@ class AuthController {
       lastname,
       email,
       password: hashedPassword,
-      app_name: decryptedAppName,
-      company_size,
       msisdn,
-      company_name,
       userId: uuid()
     };
 
     return this.authService
-      .checkForAppnameAndEmail(decryptedAppName, email)
+      .checkForEmail(email)
       .then(resp => {
         if (resp !== null) {
-          return Response.failure(
-            res,
+          return Response.failure(res,
             {
-              message: "email already exist for the appname"
+              message: "email already exist"
             },
             HttpStatus.BadRequest
           );
@@ -340,7 +230,7 @@ class AuthController {
             return Response.success(
               res,
               {
-                message: "Advertiser created successfully",
+                message: "user created successfully",
                 response: {
                   userId: data.userId,
                   verified: data.verified
@@ -362,7 +252,7 @@ class AuthController {
           });
       })
       .catch(err => {
-        this.logger.err("unable to check for app name", err);
+        this.logger.err("unable to check for email", err);
       });
   }
 
