@@ -37,14 +37,12 @@ class Question {
     return this.mongoDBClientHelper.save(data);
   }
 
-  verifyUserEmailAndCode(email, code, app_name) {
+  verifyUserEmailAndCode(email, code) {
     const param = {
       email,
-      code,
-      app_name
+      code
     };
     let params = {
-      app_name,
       email
     };
     let data = {

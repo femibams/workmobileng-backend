@@ -17,7 +17,7 @@ const config = {
   nodemailer: {
     username: process.env.NODEMAILER_USERNAME,
     password: process.env.NODEMAILER_PASSWORD,
-    host: "smtp.googlemail.com",
+    host: "smtp.gmail.com",
     port: 465,
     secure: true
   },

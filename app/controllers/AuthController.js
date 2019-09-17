@@ -291,17 +291,6 @@ class AuthController {
    * @methodVerb POST
    */
   sendEmailAndCode(req, res) {
-    const Authentication = req.header("Authentication", ["Authentication"]);
-    if (Authentication[0] === "Authentication") {
-      return Response.failure(
-        res,
-        {
-          message: "Bad Authentication"
-        },
-        HttpStatus.UNAUTHORIZED
-      );
-    }
-    const decryptedAppName = this.decryptAppname(Authentication);
     const { email, base_url } = req.body;
 
     // check if required parameters were sent
@@ -312,19 +301,19 @@ class AuthController {
         HttpStatus.BadRequest
       );
     }
-    return this.generateCodeAndSave(email, decryptedAppName)
+    return this.generateCodeAndSave(email)
       .then(data => {
         if (data === null) {
           return Response.failure(
             res,
             {
-              message: "No email and appname found"
+              message: "No email account found"
             },
             HttpStatus.NOT_FOUND
           );
         }
-        const { code, app_name } = data;
-        return SendMail(email, code, base_url, app_name)
+        const { code } = data;
+        return SendMail(email, code, base_url)
           .then(() => {
             return Response.success(
               res,
@@ -356,13 +345,11 @@ class AuthController {
   }
 
   // generate code and update in the DB
-  generateCodeAndSave(email, decryptedAppName) {
+  generateCodeAndSave(email) {
     const code = uuid();
     let codeData = { code };
-    const app_name = decryptedAppName;
     const dataToUpdateBy = {
-      email,
-      app_name
+      email
     };
     return this.authService
       .getOneAndUpdateParams(dataToUpdateBy, codeData)
@@ -382,18 +369,6 @@ class AuthController {
    * @methodVerb POST
    */
   verifyUserEmail(req, res) {
-    const Authentication = req.header("Authentication", ["Authentication"]);
-    // check if Authentication header of App name was sent
-    if (Authentication[0] === "Authentication") {
-      return Response.failure(
-        res,
-        {
-          message: "Authentication header for Appname not added"
-        },
-        HttpStatus.UNAUTHORIZED
-      );
-    }
-    const decryptedAppName = this.decryptAppname(Authentication);
     const { email, code } = req.body;
 
     // check if required fields were sent
@@ -404,15 +379,14 @@ class AuthController {
         HttpStatus.BadRequest
       );
     }
-    const app_name = decryptedAppName;
     return this.authService
-      .verifyUserEmailAndCode(email, code, app_name)
+      .verifyUserEmailAndCode(email, code)
       .then(data => {
         if (data === null) {
           return Response.failure(
             res,
             {
-              message: "No record with email, appname and code"
+              message: "No record with email and code"
             },
             HttpStatus.NOT_FOUND
           );
@@ -420,7 +394,7 @@ class AuthController {
         return Response.success(
           res,
           {
-            message: "Advetiser email verified"
+            message: "User email verified"
           },
           HttpStatus.OK
         );

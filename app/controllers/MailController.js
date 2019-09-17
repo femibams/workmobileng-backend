@@ -2,8 +2,7 @@ const config = require('../config/config');
 
 const nodemailer = require ('nodemailer');
 
-function SendMail(email, code, base_url, app_name){
-    const formattedAppname = sentenceCase(app_name);
+function SendMail(email, code, base_url){
     return new Promise((resolve, reject) => {
       const transporter = nodemailer.createTransport({
         host: config.nodemailer.host, 
@@ -16,8 +15,8 @@ function SendMail(email, code, base_url, app_name){
         }
         })
       const urlToBeSent = `${base_url}/${email}/${code}`;
-      const mailOptions = { 
-          from: `${formattedAppname} <no-reply@terragonbase.com>` ,
+      const mailOptions = {
+          from: 'femibams@gmail.com',
           to: email,
           subject: 'Verify your email',
           text: "Hello, kindly click on the URL below to verify your email address and password", // plain text body
@@ -25,6 +24,7 @@ function SendMail(email, code, base_url, app_name){
           };
       transporter.sendMail(mailOptions, function(error, info){
           if (error) {
+            console.log('email error ->', error);
             reject(error);
           } else {
             resolve(info.response);
