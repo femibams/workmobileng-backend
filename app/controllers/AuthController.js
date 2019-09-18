@@ -138,7 +138,6 @@ class AuthController {
     let firstname;
     let lastname;
     let msisdn;
-    let username;
 
     if (req.body.firstname) {
       firstname = req.body.firstname;
