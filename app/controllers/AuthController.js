@@ -486,6 +486,9 @@ class AuthController {
       );
     }
 
+    const hashedOldPassword = this.hashPassword(oldPassword);
+    const hashedNewPassword = this.hashPassword(newPassword);
+
     return this.authService.getOne({ email })
       .then((data) => {
         if (data === null){
@@ -496,41 +499,50 @@ class AuthController {
             },
             HttpStatus.NOT_FOUND
           );
+        } else{
+          if(data.password == hashedOldPassword){
+            return this.authService
+              .updatePassword(email, hashedNewPassword)
+              .then(data => {
+                if (data === null) {
+                  return Response.failure(
+                    res,
+                    {
+                      message: "No record with email"
+                    },
+                    HttpStatus.NOT_FOUND
+                  );
+                }
+                return Response.success(
+                  res,
+                  {
+                    message: "Password reset successful"
+                  },
+                  HttpStatus.OK
+                );
+              })
+              .catch(() => {
+                return Response.failure(
+                  res,
+                  {
+                    message: "Internal server Error"
+                  },
+                  HttpStatus.INTERNAL_SERVER_ERROR
+                );
+              });
+          }
         }
       })
-
-    const hashedOldPassword = this.hashPassword(oldPassword);
-    const hashedNewPassword = this.hashPassword(newPassword);
-    const newPassword = hashedPassword;
-    return this.authService
-      .updatePassword(email, app_name, newPassword)
-      .then(data => {
-        if (data === null) {
-          return Response.failure(
-            res,
-            {
-              message: "No record with email and app_name"
-            },
-            HttpStatus.NOT_FOUND
-          );
-        }
-        return Response.success(
-          res,
+      .catch((error) => {
+        this.logger.error(`An error occured ${error}`)
+        return Response.failure(res,
           {
-            message: "Password reset successful"
-          },
-          HttpStatus.OK
-        );
-      })
-      .catch(() => {
-        return Response.failure(
-          res,
-          {
-            message: "INternal server Error"
+            message: "Internal server Error"
           },
           HttpStatus.INTERNAL_SERVER_ERROR
         );
-      });
+      })
+
   }
 
   getAllUsers(req, res) {

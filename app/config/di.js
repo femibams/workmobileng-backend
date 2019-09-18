@@ -61,6 +61,7 @@ serviceLocator.register('mongo', (servicelocator) => {
       `mongodb://${config.mongo.connection.username}:${config.mongo.connection.password}` +
       `@${config.mongo.connection.host}:${config.mongo.connection.port}/${config.mongo.connection.dbProd}`;
   mongoose.Promise = bluebird;
+  console.log('connection string', connectionString);
   const mongo = mongoose.connect(connectionString);
   mongo.then(() => {
       console.log('Mongo Connection Established', connectionString)
