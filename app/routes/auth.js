@@ -12,7 +12,7 @@ module.exports.setup = function setup(server, serviceLocator) {
       name: "app health check",
       version: "1.0.0"
     },
-    (req, res) => res.send("Welcome to the Global Auth Service")
+    (req, res) => res.send("Welcome to the Backend Service for Workmobile")
   );
 
   server.post(

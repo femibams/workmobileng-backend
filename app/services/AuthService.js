@@ -53,10 +53,9 @@ class Question {
     // return this.mongoDBClientHelper.getOne(param);
   }
 
-  updatePassword(email, app_name, password) {
+  updatePassword(email, password) {
     const params = {
-      email,
-      app_name
+      email
     };
     const data = { password };
     return this.mongoDBClientHelper.getOneAndUpdate(params, data);

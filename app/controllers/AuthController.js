@@ -126,11 +126,11 @@ class AuthController {
     // console.log(decryptedAppName, "app_name");
 
     // check if all required parameters were passed
-    const { password, email } = req.body;
-    if (!password || !email) {
+    const { password, email, username } = req.body;
+    if (!password || !email || !username) {
       return Response.failure(
         res,
-        { message: "Error!! pls provide password, Email ,fields" },
+        { message: "Error!! pls provide password, Email, username fields" },
         HttpStatus.BadRequest
       );
     }
@@ -150,10 +150,12 @@ class AuthController {
     if (req.body.msisdn) {
       msisdn = req.body.msisdn;
     }
+
     const hashedPassword = this.hashPassword(password);
     const params = {
       firstname,
       lastname,
+      username,
       email,
       password: hashedPassword,
       msisdn,
@@ -484,37 +486,63 @@ class AuthController {
       );
     }
 
-    const hashedPassword = this.hashPassword(password);
-    const newPassword = hashedPassword;
-    return this.authService
-      .updatePassword(email, app_name, newPassword)
-      .then(data => {
-        if (data === null) {
+    const hashedOldPassword = this.hashPassword(oldPassword);
+    const hashedNewPassword = this.hashPassword(newPassword);
+
+    return this.authService.getOne({ email })
+      .then((data) => {
+        if (data === null){
           return Response.failure(
             res,
             {
-              message: "No record with email and app_name"
+              message: "No record with email"
             },
             HttpStatus.NOT_FOUND
           );
+        } else{
+          if(data.password == hashedOldPassword){
+            return this.authService
+              .updatePassword(email, hashedNewPassword)
+              .then(data => {
+                if (data === null) {
+                  return Response.failure(
+                    res,
+                    {
+                      message: "No record with email"
+                    },
+                    HttpStatus.NOT_FOUND
+                  );
+                }
+                return Response.success(
+                  res,
+                  {
+                    message: "Password reset successful"
+                  },
+                  HttpStatus.OK
+                );
+              })
+              .catch(() => {
+                return Response.failure(
+                  res,
+                  {
+                    message: "Internal server Error"
+                  },
+                  HttpStatus.INTERNAL_SERVER_ERROR
+                );
+              });
+          }
         }
-        return Response.success(
-          res,
-          {
-            message: "Password reset successful"
-          },
-          HttpStatus.OK
-        );
       })
-      .catch(() => {
-        return Response.failure(
-          res,
+      .catch((error) => {
+        this.logger.error(`An error occured ${error}`)
+        return Response.failure(res,
           {
-            message: "INternal server Error"
+            message: "Internal server Error"
           },
           HttpStatus.INTERNAL_SERVER_ERROR
         );
-      });
+      })
+
   }
 
   getAllUsers(req, res) {
