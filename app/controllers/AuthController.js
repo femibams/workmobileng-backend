@@ -126,7 +126,7 @@ class AuthController {
     // console.log(decryptedAppName, "app_name");
 
     // check if all required parameters were passed
-    const { password, email } = req.body;
+    const { password, email, username } = req.body;
     if (!password || !email || !username) {
       return Response.failure(
         res,
