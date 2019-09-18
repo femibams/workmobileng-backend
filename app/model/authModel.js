@@ -8,7 +8,8 @@ const config = require('../config/config');
 const authSchema = new mongoose.Schema(
   {
     email: {
-      type: String
+      type: String,
+      unique: true
     },
     msisdn: String,
     firstname: String,

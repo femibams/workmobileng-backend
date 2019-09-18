@@ -127,10 +127,10 @@ class AuthController {
 
     // check if all required parameters were passed
     const { password, email } = req.body;
-    if (!password || !email) {
+    if (!password || !email || !username) {
       return Response.failure(
         res,
-        { message: "Error!! pls provide password, Email ,fields" },
+        { message: "Error!! pls provide password, Email, username fields" },
         HttpStatus.BadRequest
       );
     }
@@ -138,6 +138,7 @@ class AuthController {
     let firstname;
     let lastname;
     let msisdn;
+    let username;
 
     if (req.body.firstname) {
       firstname = req.body.firstname;
@@ -150,10 +151,15 @@ class AuthController {
     if (req.body.msisdn) {
       msisdn = req.body.msisdn;
     }
+
+    if (req.body.username) {
+      username = req.body.username;
+    }
     const hashedPassword = this.hashPassword(password);
     const params = {
       firstname,
       lastname,
+      username,
       email,
       password: hashedPassword,
       msisdn,
@@ -484,7 +490,21 @@ class AuthController {
       );
     }
 
-    const hashedPassword = this.hashPassword(password);
+    return this.authService.getOne({ email })
+      .then((data) => {
+        if (data === null){
+          return Response.failure(
+            res,
+            {
+              message: "No record with email"
+            },
+            HttpStatus.NOT_FOUND
+          );
+        }
+      })
+
+    const hashedOldPassword = this.hashPassword(oldPassword);
+    const hashedNewPassword = this.hashPassword(newPassword);
     const newPassword = hashedPassword;
     return this.authService
       .updatePassword(email, app_name, newPassword)
