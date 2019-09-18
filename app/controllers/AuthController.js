@@ -151,9 +151,6 @@ class AuthController {
       msisdn = req.body.msisdn;
     }
 
-    if (req.body.username) {
-      username = req.body.username;
-    }
     const hashedPassword = this.hashPassword(password);
     const params = {
       firstname,
