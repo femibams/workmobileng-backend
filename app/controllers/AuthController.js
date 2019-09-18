@@ -31,84 +31,22 @@ class AuthController {
    */
   logUserIn(req, res) {
     this.logger.info("login in user");
-    const Authentication = req.header("Authentication", ["Authentication"]);
-    // check if Authentication header was sent
-    if (Authentication[0] === "Authentication") {
-      return Response.failure(
-        res,
-        {
-          message: "Bad Authentication App name not included in the header"
-        },
-        HttpStatus.UNAUTHORIZED
-      );
-    }
-    const decryptedAppName = this.decryptAppname(Authentication);
-    // get username and password from basic auth
+    
+    const user = req.body;
 
-    const user = auth(req);
-    const email = user.name;
-    const password = user.pass;
+    const { email, password } = user;
 
     // check if required parameters are passed
     if (!password || !email) {
       return Response.failure(
         res,
-        { message: "Error!! pls provide password, Email ,fields" },
+        { message: "Error!! pls provide password, Email" },
         HttpStatus.BadRequest
       );
     }
 
-    const app_name = decryptedAppName;
-
-    if (decryptedAppName === "cdp") {
-      let app_name = decryptedAppName.toLowerCase();
-      return this.authService
-        .getOne_cdp({ email, app_name })
-        .then(data => {
-          if (data === null) {
-            return Response.failure(
-              res,
-              {
-                message: "Invalid Email"
-              },
-              HttpStatus.BadRequest
-            );
-          }
-          const hash = data.password;
-          if (bcrypt.compareSync(password, hash)) {
-            return Response.success(
-              res,
-              {
-                message: "User successfully logged in",
-                response: {
-                  userId: data.userId,
-                  role: data.role
-                }
-              },
-              HttpStatus.OK
-            );
-          } else {
-            return Response.failure(
-              res,
-              {
-                message: "Invalid password"
-              },
-              HttpStatus.BadRequest
-            );
-          }
-        })
-        .catch(e => {
-          return Response.failure(
-            res,
-            {
-              message: "Invalid Appname"
-            },
-            HttpStatus.BadRequest
-          );
-        });
-    }
     return this.authService
-      .getOne({ email, app_name })
+      .getOne({ email })
       .then(data => {
         if (data === null) {
           return Response.failure(
@@ -120,15 +58,15 @@ class AuthController {
           );
         }
         const hash = data.password;
-        if (bcrypt.compareSync(password, hash)) {
+        const inputPassword = password;
+
+        if (this.comparePass(inputPassword, hash)) {
           return Response.success(
             res,
             {
               message: "User successfully logged in",
               response: {
-                userId: data.userId,
-                verified: data.verified,
-                privilege: data.privilege
+                data
               }
             },
             HttpStatus.OK
@@ -143,15 +81,23 @@ class AuthController {
           );
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log('An error occured', error);
         return Response.failure(
           res,
           {
-            message: "Invalid Appname"
+            message: "Something went wrong"
           },
           HttpStatus.BadRequest
         );
       });
+  }
+
+  comparePass(input, hash){
+    const hashedInput = crypto.scryptSync(input, 'salt', 64);
+    const hashedInputValue = hashedInput.toString('hex');
+
+    return (hashedInputValue == hash ? true : false)
   }
 
   /**
@@ -527,64 +473,19 @@ class AuthController {
    */
 
   resetPassword(req, res) {
-    const Authentication = req.header("Authentication", ["Authentication"]);
-    //check if Authentication header was sent
-    if (Authentication[0] === "Authentication") {
-      return Response.failure(
-        res,
-        {
-          message: "Bad Authentication"
-        },
-        HttpStatus.UNAUTHORIZED
-      );
-    }
-    const decryptedAppName = this.decryptAppname(Authentication);
-    let app_name = decryptedAppName;
-    const { password, email } = req.body;
+    const { oldPassword, newPassword, email } = req.body;
 
     //check if required fields were sent
-    if (!password || !email) {
+    if (!oldPassword || !newPassword || !email) {
       return Response.failure(
         res,
-        { message: "Error!! pls provide password, Email ,fields" },
+        { message: "Error!! pls provide oldPassword, Email ,newPassword" },
         HttpStatus.BadRequest
       );
     }
 
     const hashedPassword = this.hashPassword(password);
     const newPassword = hashedPassword;
-    if (decryptedAppName === "cdp") {
-      let app_name = decryptedAppName.toLowerCase();
-      return this.authService
-        .updatePassword_cdp(email, app_name, newPassword)
-        .then(data => {
-          if (data === null) {
-            return Response.failure(
-              res,
-              {
-                message: "No record with email and app_name"
-              },
-              HttpStatus.NOT_FOUND
-            );
-          }
-          return Response.success(
-            res,
-            {
-              message: "Password reset successful"
-            },
-            HttpStatus.OK
-          );
-        })
-        .catch(() => {
-          return Response.failure(
-            res,
-            {
-              message: "INternal server Error"
-            },
-            HttpStatus.INTERNAL_SERVER_ERROR
-          );
-        });
-    }
     return this.authService
       .updatePassword(email, app_name, newPassword)
       .then(data => {

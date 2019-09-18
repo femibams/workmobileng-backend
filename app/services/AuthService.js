@@ -48,9 +48,9 @@ class Question {
     let data = {
       verified: true
     };
-
-    this.getOneAndUpdateParams(params, data);
-    return this.mongoDBClientHelper.getOne(param);
+    return this.mongoDBClientHelper.getOneAndUpdate(param, data);
+    // return this.getOneAndUpdateParams(param, data);
+    // return this.mongoDBClientHelper.getOne(param);
   }
 
   updatePassword(email, app_name, password) {
