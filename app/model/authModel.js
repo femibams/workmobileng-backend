@@ -18,10 +18,6 @@ const authSchema = new mongoose.Schema(
       type: String,
       unique: true
     },
-    privilege: {
-      type: String,
-      default: 'user',
-    },
     verified: {
       type: Boolean,
       default: false
@@ -30,9 +26,6 @@ const authSchema = new mongoose.Schema(
       type: String,
       unique: true
     },
-    app_name: String,
-    company_size: Number,
-    company_name: String,
     code: String
   },
   {

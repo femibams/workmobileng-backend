@@ -1,5 +1,5 @@
 /**
- * Created by Adeyinka Micheal on 14/02/2019.
+ * Created by Femibams on 16/09/2019.
  */
 const MongoDBHelper = require("../lib/MongoDBHelper");
 const AuthModel = require("../model/authModel");
@@ -26,10 +26,9 @@ class Question {
    * @returns {Promise}
    */
 
-  checkForAppnameAndEmail(app_name, email) {
+  checkForEmail(email) {
     const param = {
-      email,
-      app_name
+      email
     };
     return this.mongoDBClientHelper.getOne(param);
   }
@@ -38,22 +37,20 @@ class Question {
     return this.mongoDBClientHelper.save(data);
   }
 
-  verifyUserEmailAndCode(email, code, app_name) {
+  verifyUserEmailAndCode(email, code) {
     const param = {
       email,
-      code,
-      app_name
+      code
     };
     let params = {
-      app_name,
       email
     };
     let data = {
       verified: true
     };
-
-    this.getOneAndUpdateParams(params, data);
-    return this.mongoDBClientHelper.getOne(param);
+    return this.mongoDBClientHelper.getOneAndUpdate(param, data);
+    // return this.getOneAndUpdateParams(param, data);
+    // return this.mongoDBClientHelper.getOne(param);
   }
 
   updatePassword(email, app_name, password) {
