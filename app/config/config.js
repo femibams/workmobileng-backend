@@ -9,7 +9,7 @@ const config = {
   appName,
   server: {
     url: process.env.APP_URL,
-    port: process.env.APP_PORT
+    port: process.env.PORT
   },
   mail: {
     send_grid: process.env.SENDGRID_API_KEY
