@@ -90,8 +90,8 @@ module.exports.setup = function setup(server, serviceLocator) {
 
   server.get(
     {
-      path: "/users/:userId",
-      name: "get all users by userid",
+      path: "/user/:userId",
+      name: "get a user by userid",
       version: "1.0.0"
     },
     (req, res) => AuthController.getByUserId(req, res)

@@ -711,60 +711,9 @@ class AuthController {
   }
 
   getByUserId(req, res) {
-    const Authentication = req.header("Authentication", ["Authentication"]);
-    // check if Authentication header was sent
-    if (Authentication[0] === "Authentication") {
-      return Response.failure(
-        res,
-        {
-          message: "Bad Authentication"
-        },
-        HttpStatus.UNAUTHORIZED
-      );
-    }
-    const decryptedAppName = this.decryptAppname(Authentication);
-
     const { userId } = req.params;
     let param = {};
     param.userId = userId;
-    param.app_name = decryptedAppName;
-
-    if (decryptedAppName === "cdp") {
-      let app_name = decryptedAppName.toLowerCase();
-      let param_cdp = {};
-      param_cdp.userId = userId;
-      param_cdp.app_name = app_name;
-      return this.authService
-        .getByUserIdCDP(param_cdp)
-        .then(data => {
-          if (data === null) {
-            return Response.failure(
-              res,
-              {
-                message: "No record with userId and app_name"
-              },
-              HttpStatus.NOT_FOUND
-            );
-          }
-          return Response.success(
-            res,
-            {
-              message: "UserId data fetched successfully",
-              response: data
-            },
-            HttpStatus.OK
-          );
-        })
-        .catch(() => {
-          return Response.failure(
-            res,
-            {
-              message: "Internal server Error"
-            },
-            HttpStatus.INTERNAL_SERVER_ERROR
-          );
-        });
-    }
 
     return this.authService
       .getByUserId(param)
@@ -773,7 +722,7 @@ class AuthController {
           return Response.failure(
             res,
             {
-              message: "No record with userId and app_name"
+              message: "No record with this userId"
             },
             HttpStatus.NOT_FOUND
           );
