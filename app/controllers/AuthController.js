@@ -530,6 +530,14 @@ class AuthController {
                   HttpStatus.INTERNAL_SERVER_ERROR
                 );
               });
+          } else{
+            return Response.failure(
+              res,
+              {
+                message: "Current password is incorrect"
+              },
+              HttpStatus.BadRequest
+            );
           }
         }
       })
