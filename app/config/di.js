@@ -9,6 +9,8 @@ require('winston-daily-rotate-file');
 
 const AuthService = require('../services/AuthService');
 const AuthController = require('../controllers/AuthController');
+const JobService = require('../services/JobService');
+const JobController = require('../controllers/JobController');
 
 const mongoose = require('mongoose');
 const bluebird = require('bluebird');
@@ -83,15 +85,35 @@ serviceLocator.register('authService', (servicelocator) => {
   return new AuthService(logger, mongoclient);
 });
 
+/**
+ * Creates an instance of the Job Service
+ */
+serviceLocator.register('jobService', (servicelocator) => {
+  const logger = servicelocator.get('logger');
+  const mongoclient = servicelocator.get('mongo');
+  return new JobService(logger, mongoclient);
+});
+
 
 /**
- * Creates an instance of the questions Controller
+ * Creates an instance of the auth Controller
  */
 serviceLocator.register('authController', (servicelocator) => {
   const logger = servicelocator.get('logger');
   const authService = servicelocator.get('authService');
   return new AuthController(
     logger, authService
+  );
+});
+
+/**
+ * Creates an instance of the job Controller
+ */
+serviceLocator.register('jobController', (servicelocator) => {
+  const logger = servicelocator.get('logger');
+  const jobService = servicelocator.get('jobService');
+  return new JobController(
+    logger, jobService
   );
 });
 

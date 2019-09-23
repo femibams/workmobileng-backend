@@ -3,7 +3,6 @@
  */
 const MongoDBHelper = require("../lib/MongoDBHelper");
 const AuthModel = require("../model/authModel");
-// const AuthModelCDP = require("../model/authModel_CDP");
 const config = require("../config/config");
 
 class Question {
@@ -16,7 +15,6 @@ class Question {
   constructor(logger, mongoclient) {
     this.logger = logger;
     this.mongoDBClientHelper = new MongoDBHelper(mongoclient, AuthModel);
-    // this.mongoDBClientHelperCDP = new MongoDBHelper(mongoclient, AuthModelCDP);
   }
 
   /**
