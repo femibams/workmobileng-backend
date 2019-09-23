@@ -1,5 +1,5 @@
 /**
- * Created by Eshemogie Kassim(Jnr) on 10/10/2018.
+ * Created by Femibams on 23/09/2018.
 
  */
 //const PartnerAuthentication = require('../lib/middleware');
