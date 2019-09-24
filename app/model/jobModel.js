@@ -4,6 +4,7 @@
 
 const mongoose = require('mongoose');
 const config = require('../config/config');
+const Schema = mongoose.Schema;
 
 const jobSchema = new mongoose.Schema({
     projectOwner: {

@@ -12,6 +12,10 @@ class JobService {
         this.logger = logger;
         this.mongoClientHelper = new MongoDBHelper(mongoClient, JobModel)
     }
+
+    saveJob(data){
+        return this.mongoClientHelper.save(data)
+    }
 }
 
 module.exports = JobService
