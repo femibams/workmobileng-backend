@@ -6,21 +6,25 @@ const mongoose = require('mongoose');
 const config = require('../config/config');
 
 const jobSchema = new mongoose.Schema({
-    user: { 
+    projectOwner: {
         type: Schema.Types.ObjectId,
         ref: 'users' 
     },
     title: String,
     description: String,
     duration: Number,
-    skills: [{ 
+    skills: [{
         type: Schema.Types.ObjectId, 
         ref: 'skills'
     }],
-    budget: '',
+    lowerLimitBudget: Number,
+    upperLimitBudget: Number,
     status: {
         type: String,
         enum: []
     },
-    rating
+    rating: Number
 });
+
+const jobModel = mongoose.model(config.mongo.collections.job, jobSchema);
+module.exports = jobModel;

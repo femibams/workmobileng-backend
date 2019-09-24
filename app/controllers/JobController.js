@@ -9,6 +9,9 @@ class JobController {
         this.jobService = jobService;
     }
 
+    createJob(req, res){
+        
+    }
 }
 
 module.exports = JobController;
