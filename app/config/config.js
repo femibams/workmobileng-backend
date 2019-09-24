@@ -32,7 +32,8 @@ const config = {
       dbProd: process.env.MONGODB_DATABASE_NAME
     },
     collections: {
-      users: "users"
+      users: "users",
+      job: "jobs"
     },
     queryLimit: process.env.MONGODB_QUERY_LIMIT,
     questionLimit: process.env.QUESTION_LIMIT
