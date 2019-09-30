@@ -10,6 +10,7 @@ dotenv.config();
 
 const config = require("./app/config/config");
 const authRoute = require("./app/routes/auth");
+const jobRoute = require("./app/routes/job");
 const restify = require("restify");
 const plugins = require("restify-plugins");
 const referrerPolicy = require("referrer-policy");
@@ -46,6 +47,7 @@ server.use(referrerPolicy({ policy: "no-referrer-when-downgrade" }));
 
 // setup Routing and Error Event Handling
 authRoute.setup(server, serviceLocator);
+jobRoute.setup(server, serviceLocator);
 
 server.listen(config.server.port, () => {
   console.log("%s listening at %s", config.appName, config.server.port);
