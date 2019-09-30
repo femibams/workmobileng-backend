@@ -27,15 +27,24 @@ class MongoDBHelper {
    */
   get(params) {
     return new Promise((resolve, reject) => {
-      const query = this.mongodbModel.findOne(params.conditions);
+      const query = this.mongodbModel.find(params.conditions);
 
       if (params.fields) {
         query.select(params.fields);
       }
 
+      if (params.limit && !params.skip) {
+        query.limit(Number(limit));
+      }
+
+      if (params.limit && params.skip) {
+        query.skip(Number(params.skip))
+            .limit(Number(params.limit));
+      }
+
       if (params.populate && params.populate.length > 0) {
         params.populate.forEach(collection => {
-          query.populate({ path: collection.path, model: collection.model });
+          query.populate(collection);
         });
       }
 

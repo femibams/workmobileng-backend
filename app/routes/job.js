@@ -6,11 +6,20 @@
     const jobController = serviceLocator.get('jobController');
 
     server.post(
-        {
-          path: "/job/create",
-          name: "Create a job",
-          version: "1.0.0"
-        },
-        (req, res) => jobController.createJob(req, res)
-      );
+      {
+        path: "/job/create",
+        name: "Create a job",
+        version: "1.0.0"
+      },
+      (req, res) => jobController.createJob(req, res)
+    );
+
+    server.get(
+      {
+        path: "/job/find",
+        name: "Find a job",
+        version: "1.0.0"
+      },
+      (req, res) => jobController.findJob(req, res)
+    );
  }

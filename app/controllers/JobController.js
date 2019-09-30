@@ -38,11 +38,27 @@ class JobController {
                 }, HttpStatus.OK)
             })
             .catch((error) => {
-                this.logger.error(`An error occured while trying to save a job ${error}`);
+                console.error(`An error occured while trying to save a job ${JSON.stringify(error)}`);
                 Response.failure(res, {
                     message: 'Something went wrong'
                 }, HttpStatus.INTERNAL_SERVER_ERROR)
             })
+    }
+
+    findJob(req, res){
+        const searchParams = req.query;
+
+        return this.jobService.findJob(searchParams)
+            .then((result) => {
+                console.log('result', result);
+                Response.success(res, {
+                    message: 'Found records',
+                    response: result
+                }, HttpStatus.OK)
+            })
+            .catch((error) => {
+                console.log('error occured ', error)
+            });
     }
 }
 
