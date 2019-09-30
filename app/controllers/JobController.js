@@ -52,7 +52,7 @@ class JobController {
             .then((result) => {
                 console.log('result', result);
                 Response.success(res, {
-                    message: 'Found records',
+                    message: (result.length > 0) ? 'Found records' : 'No records found',
                     response: result
                 }, HttpStatus.OK)
             })
