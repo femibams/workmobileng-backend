@@ -1,5 +1,5 @@
 /**
- * Created by Femibams on 23/09/219
+ * Created by Femibams on 23/09/2019
  */
 
 const mongoose = require('mongoose');
@@ -26,6 +26,10 @@ const jobSchema = new mongoose.Schema({
         type: Schema.ObjectId, 
         ref: 'skills'
     }],
+    category: {
+        type: Schema.ObjectId, 
+        ref: 'categories'
+    },
     lowerLimitBudget: Number,
     upperLimitBudget: Number,
     status: {
