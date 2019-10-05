@@ -15,19 +15,19 @@ class JobController {
     createJob(req, res){
         const { user, title, desc, 
             duration, skills, lowerLimitBudget, 
-            upperLimitBudget
+            upperLimitBudget, category
         } = req.body;
 
-        if(!user || !title || !desc || !duration || !skills){
+        if(!user || !title || !desc || !duration || !skills, category){
             return Response.failure(res, {
-                message: 'Please pass all required fields(user, title, desc, duration, skills)'
+                message: 'Please pass all required fields(user, title, desc, duration, skills, category)'
             }, HttpStatus.BadRequest)
         }
 
         const objectToSave = {
             projectOwner: user, title, desc,
             duration, skills, lowerLimitBudget,
-            upperLimitBudget
+            upperLimitBudget, category
         };
 
         return this.jobService.saveJob(objectToSave)
