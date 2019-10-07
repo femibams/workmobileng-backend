@@ -277,7 +277,7 @@ class AuthController {
               {
                 message: "Unable to send code to mail"
               },
-              HttpStatus.BadRequest
+              HttpStatus.INTERNAL_SERVER_ERROR
             );
           });
       })
