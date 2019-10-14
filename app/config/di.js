@@ -11,6 +11,8 @@ const AuthService = require('../services/AuthService');
 const AuthController = require('../controllers/AuthController');
 const JobService = require('../services/JobService');
 const JobController = require('../controllers/JobController');
+const CategoryService = require('../services/CategoryService');
+const CategoryController = require('../controllers/CategoryController');
 
 const mongoose = require('mongoose');
 const bluebird = require('bluebird');
@@ -96,6 +98,15 @@ serviceLocator.register('jobService', (servicelocator) => {
 
 
 /**
+ * Creates an instance of the Category Service
+ */
+serviceLocator.register('categoryService', (servicelocator) => {
+  const logger = servicelocator.get('logger');
+  const mongoclient = servicelocator.get('mongo');
+  return new CategoryService(logger, mongoclient);
+});
+
+/**
  * Creates an instance of the auth Controller
  */
 serviceLocator.register('authController', (servicelocator) => {
@@ -114,6 +125,17 @@ serviceLocator.register('jobController', (servicelocator) => {
   const jobService = servicelocator.get('jobService');
   return new JobController(
     logger, jobService
+  );
+});
+
+/**
+ * Creates an instance of the category Controller
+ */
+serviceLocator.register('categoryController', (servicelocator) => {
+  const logger = servicelocator.get('logger');
+  const categoryService = servicelocator.get('categoryService');
+  return new CategoryController(
+    logger, categoryService
   );
 });
 

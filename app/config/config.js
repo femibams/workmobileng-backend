@@ -33,7 +33,8 @@ const config = {
     },
     collections: {
       users: "users",
-      job: "jobs"
+      job: "jobs",
+      category: "categories"
     },
     queryLimit: process.env.MONGODB_QUERY_LIMIT,
     questionLimit: process.env.QUESTION_LIMIT

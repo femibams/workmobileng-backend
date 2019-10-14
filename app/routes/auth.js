@@ -80,16 +80,6 @@ module.exports.setup = function setup(server, serviceLocator) {
 
   server.get(
     {
-      path: "/users/all",
-      name: "get all users without pagination",
-      version: "1.0.0"
-    },
-    (req, res) => AuthController.getAllUsersNoPagination(req, res)
-  );
-
-
-  server.get(
-    {
       path: "/user/:userId",
       name: "get a user by userid",
       version: "1.0.0"
@@ -97,39 +87,4 @@ module.exports.setup = function setup(server, serviceLocator) {
     (req, res) => AuthController.getByUserId(req, res)
   );
 
-  server.get(
-    {
-      path: "/role/:userId",
-      name: "get user role by userid",
-      version: "1.0.0"
-    },
-    (req, res) => AuthController.getUserRole(req, res)
-  );
-
-  server.get(
-    {
-      path: "/allUsers/:superAdminId",
-      name: "get all users created by a superAdmin",
-      version: "1.0.0"
-    },
-    (req, res) => AuthController.getAllUsersCreatedBySuperAdmin(req, res)
-  );
-
-  server.del(
-    {
-      path: "/delete_user/:userId",
-      name: "delete a user by id",
-      version: "1.0.0"
-    },
-    (req, res) => AuthController.deleteByUserId(req, res)
-  );
-
-  server.put(
-    {
-      path: "/updateUserRole/:userId",
-      name: "update user profile", //update user role based on User Id
-      version: "1.0.0"
-    },
-    (req, res) => AuthController.updateUserRole(req, res)
-  );
 };
