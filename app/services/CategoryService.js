@@ -7,6 +7,13 @@ class CategoryService {
         this.logger = logger;
         this.mongoDBClientHelper = new MongoDBHelper(categoryModel, mongoClient)
     }
+
+    /**
+     * 
+     */
+    create(data) {
+        return this.mongoDBClientHelper.save(data);
+    }
 }
 
 module.exports = CategoryService;
