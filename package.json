@@ -25,7 +25,7 @@
     "crypto": "^1.0.1",
     "dotenv": "^6.2.0",
     "mongoose": "5.4.12",
-    "nodemailer": "6.1.1",
+    "nodemailer": "6.4.16",
     "referrer-policy": "1.1.0",
     "restify": "8.3.2",
     "restify-cors-middleware": "1.1.1",
